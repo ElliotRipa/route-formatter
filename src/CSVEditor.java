@@ -1,9 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CSVEditor {
 
@@ -88,18 +85,17 @@ public class CSVEditor {
 
         String outputWithoutFileExtension = file.toString().substring(25, file.toString().length()-4);
 
-        File outputFile = new File("C:\\Users\\ellio\\Documents\\Custom Office Templates\\Ruttningar\\ScriptOutput\\" + outputWithoutFileExtension + "FIXED.csv");
+        File outputFile = new File("C:\\Users\\ellio\\Documents\\Custom Office Templates\\Ruttningar\\ScriptOutput\\" + outputWithoutFileExtension + " FIXED.csv");
 
         FileWriter fw = new FileWriter(outputFile);
 
-        for (String outp : output) {
-            fw.write(outp);
+        for (String outputLine : output) {
+            fw.write(outputLine);
         }
 
         fw.close();
 
-
-        System.out.println(file.getParent());
+        // TODO: Return something sensible.
         return true;
     }
 
