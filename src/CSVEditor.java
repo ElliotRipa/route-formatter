@@ -1,26 +1,43 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class CSVEditor {
 
     public static boolean fixCSV(File file) throws IOException {
 
-        ArrayList<String> output = new ArrayList<>();
-        ArrayList<String> input = new ArrayList<>();
+        ArrayList<String[]> output = new ArrayList<>();
+        ArrayList<String[]> input = new ArrayList<>();
 
         Scanner sc = new Scanner(file);
 
         while(sc.hasNextLine()) {
-            input.add(sc.nextLine());
+            String[] line = sc.nextLine().split(",");
+            if(line.length != 16) {
+                throw new RuntimeException("Improperly formatted file");
+            }
+            input.add(line);
         }
 
+        input.get(0)[0] = input.get(0)[0].substring(1);
+
         // First line
-        if(!input.get(0).equals("\uFEFFRutt,Ordernr,Leveranstid,Typ,Kund,Gata,Postnr,Ort,Leverans,Lasttid,Meddelande,Portkod,Telefonnummer,Total,Enhet,Bruttovikt")) {
-            throw new RuntimeException("Improperly formatted file");
+
+        Scanner expectationReader = new Scanner(new File("src/expected-format"));
+        String[] expectation = expectationReader.next().split(",");
+
+        String[] firstLine = input.get(0);
+        if(Arrays.equals(firstLine, expectation)) {
+            output.add(firstLine);
         } else {
-            output.add("\uFEFFRutt,Ordernr,T-Fön,Från,Till,Typ,Kund,Gata,Postnr,Ort,Leverans,Lasttid,Meddelande,Portkod,Telefonnummer,Total,Enhet,Bruttovikt, Egenskaper");
+            throw new RuntimeException("Improperly formatted file");
         }
+
+
+/*
+        getLocation(file);
 
         boolean firstCounted = false;
         for (String line : input) {
@@ -84,8 +101,8 @@ public class CSVEditor {
 
 
         String outputWithoutFileExtension = file.toString().substring(25, file.toString().length()-4);
-
-        File outputFile = new File("C:\\Users\\ellio\\Documents\\Custom Office Templates\\Ruttningar\\ScriptOutput\\" + outputWithoutFileExtension + " FIXED.csv");
+*/
+        /*File outputFile = new File("C:\\Users\\ellio\\Documents\\Custom Office Templates\\Ruttningar\\ScriptOutput\\" + outputWithoutFileExtension + " FIXED.csv");
 
         FileWriter fw = new FileWriter(outputFile);
 
@@ -93,10 +110,31 @@ public class CSVEditor {
             fw.write(outputLine);
         }
 
-        fw.close();
+        fw.close();*/
 
         // TODO: Return something sensible.
         return true;
+    }
+
+    public static String getLocation(File file, HashMap<String, String> knownLocations) throws FileNotFoundException {
+
+        return "false";
+
+    }
+
+
+    public static HashMap<String, String> makeKnownLocations(File knownLocations) throws FileNotFoundException {
+
+        HashMap<String, String> locations = new HashMap<>();
+        Scanner locationReader = new Scanner(knownLocations);
+
+        while(locationReader.hasNextLine()) {
+            String[] words = locationReader.next().split(",");
+            locations.put(words[0], words[1]);
+        }
+
+        return locations;
+
     }
 
 }
